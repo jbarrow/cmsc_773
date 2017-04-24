@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import glob
 
 def read_broken_tsv(filename):
@@ -21,7 +22,9 @@ def read_broken_tsv(filename):
                 item[5] = '__TAB__'.join(item[5:])
                 item = item[:6]
 
-    return pd.DataFrame(data, columns=['post_id', 'user_id', 'time', 'subreddit', 'title', 'text'])
+    return pd.DataFrame(data,
+        columns=['post_id', 'user_id', 'time', 'subreddit', 'title', 'text']
+    )
 
 def read_data(mask='./controls/suicidewatch_controls/*.posts'):
     """
@@ -33,3 +36,22 @@ def read_data(mask='./controls/suicidewatch_controls/*.posts'):
     df['time'] = pd.to_datetime(df['time'], unit='s')
     df['user_id'] = pd.to_numeric(df['user_id'])
     return df
+
+def read_indices(mask):
+    """
+    Take in a mask to a file that is a list of indices, and return a numpy
+    array with those indices
+    """
+    indices = []
+    for index_file in glob.glob(mask):
+        with open(index_file, 'r') as ix:
+            for line in ix:
+                if not line.strip(): continue
+                try:
+                    indices.append(int(line.strip()))
+                except ValueError:
+                    continue
+    return pd.DataFrame(indices, columns=['post_id'])
+
+def parse_data():
+    pass
