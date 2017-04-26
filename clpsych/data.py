@@ -18,7 +18,7 @@ def read_broken_tsv(filename):
             elif len(item) == 6:
                 data.append(item)
             # formatting error
-            else:
+            elif len(item) > 6:
                 item[5] = '__TAB__'.join(item[5:])
                 item = item[:6]
 

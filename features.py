@@ -16,7 +16,7 @@ if __name__ == '__main__':
 
     #### CODE TO CREATE A LENGTH FEATURE
     # to create a new feature, we start with the old pandas table
-    length = store.data.copy()
+    length = store.data
     length = length.assign(post_length = lambda x: x.text.str.len())
 
     # when the feature is done, save it to the
