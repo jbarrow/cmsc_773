@@ -16,6 +16,12 @@ class Store(object):
             print('Populating data, this may take some time...')
             self._create_dataframe(config, filename)
 
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exception_type, exception_value, traceback):
+        self.finalize()
+
     def finalize(self):
         self._store.close()
 
@@ -36,6 +42,8 @@ class Store(object):
         self._store['indices/train'] = read_indices(mask=config['train_mask'])
         self._store['indices/test'] = read_indices(mask=config['test_mask'])
         self._store['indices/dev'] = read_indices(mask=config['dev_mask'])
+        if 'sample_mask' in config:
+            self._store['indices/sample'] = read_indices(mask=config['sample_mask'])
         # use SpaCy to parse the data (if requested)
         if config['parse']:
             print('Parsing data...')
@@ -55,29 +63,33 @@ class Store(object):
         return self._store['data']
 
     @property
-    def parse(self):
-        if self._config['parse']:
-            return self._store['parse']
-        return None
-
-    @property
     def train_indices(self): return self._store['indices/train']
+    @property
+    def test_indices(self): return self._store['indices/test']
     @property
     def dev_indices(self): return self._store['indices/dev']
     @property
-    def test_indices(self): return self._store['indices/test']
+    def sample_indices(self): return self._store['indices/sample']
+
+    def select(self, indices, df=None):
+        """
+        indices : pd.DataFrame, with one column labeled 'user_id'
+        """
+        if df is None:
+            df = self._store['data']
+        return df.merge(indices, on='user_id')
 
     @property
     def doc_features(self):
         root = self._store.get_node('documents')
         for node in root._f_list_nodes():
-            yield os.path.join('/', root._v_name, node._v_name)
+            yield '/{0}/{1}'.format(root._v_name, node._v_name)
 
     @property
     def user_features(self):
         root = self._store.get_node('users')
         for node in root._f_list_nodes():
-            yield os.path.join('/', root._v_name, node._v_name)
+            yield '/{0}/{1}'.format(root._v_name, node._v_name)
 
     @property
     def documents(self):
@@ -85,6 +97,12 @@ class Store(object):
         for feature in self.doc_features:
             df = df.merge(self._store[feature], on='post_id')
         return df
+
+    @property
+    def parse(self):
+        if self._config['parse']:
+            return self._store['parse']
+        return None
 
     @property
     def users(self):

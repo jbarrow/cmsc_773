@@ -51,7 +51,7 @@ def read_indices(mask):
                     indices.append(int(line.strip()))
                 except ValueError:
                     continue
-    return pd.DataFrame(indices, columns=['post_id'])
+    return pd.DataFrame(indices, columns=['user_id'])
 
 def parse_data():
     pass
