@@ -7,7 +7,7 @@ import random
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-d', dest='dataset', default='**/**/TRAIN.txt')
-    parser.add_argument('-n', dest='n', type=int, default=5000)
+    parser.add_argument('-n', dest='n', type=int, default=1000)
     args = parser.parse_args()
 
     train_indices = read_indices(args.dataset)

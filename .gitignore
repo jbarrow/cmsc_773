@@ -1,4 +1,7 @@
+# Data
 *.h5
+*.txt
+*.pkl
 
 # Mac-specific
 .DS_Store

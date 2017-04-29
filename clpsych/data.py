@@ -2,13 +2,17 @@ import pandas as pd
 import numpy as np
 import glob
 
+from collections import namedtuple
+
+Token = namedtuple('Token', ['i', 'sent', 'tok', 'lemma', 'head', 'pos', 'dep'])
+
 def read_broken_tsv(filename):
     """
     Reads a (potentially malformated) TSV file and returns a
     pandas dataframe with the contents.
     """
     data = []
-    with open(filename) as fp:
+    with codecs.open(filename, 'r', encoding='utf-8') as fp:
         for line in fp:
             item = line.strip().split('\t')
             # image/title-only
@@ -52,6 +56,3 @@ def read_indices(mask):
                 except ValueError:
                     continue
     return pd.DataFrame(indices, columns=['user_id'])
-
-def parse_data():
-    pass

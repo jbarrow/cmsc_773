@@ -1,1 +1,1 @@
-from data import read_data
+from data import *

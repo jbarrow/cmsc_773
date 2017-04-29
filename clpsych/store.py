@@ -1,5 +1,6 @@
-from data import read_data, parse_data, read_indices
+from data import read_data, read_indices
 
+import pickle
 import pandas as pd
 import os
 
@@ -45,8 +46,9 @@ class Store(object):
         if 'sample_mask' in config:
             self._store['indices/sample'] = read_indices(mask=config['sample_mask'])
         # use SpaCy to parse the data (if requested)
-        if config['parse']:
-            print('Parsing data...')
+        if 'parsed' in config:
+            print('Loading parsed data...')
+            self._doc_parse, self._title_parse = pickle.load(open(config['parse'], 'rb'))
         # save the configuration data
         self._store['config'] = pd.DataFrame()
         self._store.get_storer('config').attrs.metadata = config
@@ -100,9 +102,7 @@ class Store(object):
 
     @property
     def parse(self):
-        if self._config['parse']:
-            return self._store['parse']
-        return None
+        return [self._doc_parse, self._title_parse]
 
     @property
     def users(self):
