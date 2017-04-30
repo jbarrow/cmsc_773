@@ -12,7 +12,7 @@ def read_broken_tsv(filename):
     pandas dataframe with the contents.
     """
     data = []
-    with codecs.open(filename, 'r', encoding='utf-8') as fp:
+    with open(filename, 'r') as fp:
         for line in fp:
             item = line.strip().split('\t')
             # image/title-only
