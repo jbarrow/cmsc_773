@@ -48,7 +48,7 @@ class Store(object):
         # use SpaCy to parse the data (if requested)
         if 'parsed' in config:
             print('Loading parsed data...')
-            self._doc_parse, self._title_parse = pickle.load(open(config['parse'], 'rb'))
+            self._doc_parse, self._title_parse = read_parse(mask=config['parse'])
         # save the configuration data
         self._store['config'] = pd.DataFrame()
         self._store.get_storer('config').attrs.metadata = config

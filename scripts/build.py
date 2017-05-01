@@ -6,8 +6,7 @@ if __name__ == '__main__':
         'train_mask': './**/**/TRAIN.txt',
         'test_mask': './**/**/TEST.txt',
         'dev_mask': './**/**/DEV.txt',
-        'sample_mask': './SAMPLE.txt',
-        'parse': False
+        'sample_mask': './SAMPLE.txt'
     }
 
 
