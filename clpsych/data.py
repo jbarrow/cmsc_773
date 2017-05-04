@@ -62,6 +62,8 @@ def parse_line(line):
     line = line.split('\t')
     if len(line) == 6:
         line.append('_')
+    elif len(line) < 6:
+        return None
     return Token(int(line[0]), line[1], line[2], line[3], int(line[5]), line[6])
 
 def read_parses(mask):
@@ -71,24 +73,44 @@ def read_parses(mask):
     docs, titles = {}, {}
     for f in glob.glob(mask):
         with codecs.open(f, 'r', encoding='utf-8') as fp:
-            doc, title, post = [], [], None
+            doc, title = [], []
+            post = ''
             cur_title = False
             for line in fp:
-                if post is None:
+                if not line.strip():
+                    # if we encounter a blank line, insert the previous post and
+                    # keep going
+                    docs[post] = doc
+                    titles[post] = title
+                    doc, title = [], []
+                    post = ''
+                    cur_title = False
+                    continue
+
+                if not post:
+                    # if we don't have a post, that means that the next line is
+                    # the new post title
                     post = line.strip()
-                elif len(line.strip()) > 0:
-                    token = parse_line(line.strip())
-                    if cur_title and token.i != 0:
-                        title.append(token)
-                    elif token.i == 0 and len(title) == 0:
+                    continue
+
+                # make sure that we have a token
+                token = parse_line(line.strip())
+                if token is None:
+                    continue
+                # does it belong to a document or a title?
+                if token.i == 0:
+                    if len(title) == 0:
                         title.append(token)
                         cur_title = True
-                    elif not cur_title or token.i == 0:
+                    else:
                         doc.append(token)
-                        titles[post] = title
                         cur_title = False
+                    continue
+
+                # append it to the correct list depending on what we're reading
+                if cur_title:
+                    title.append(token)
                 else:
-                    docs[post] = doc
-                    doc, title, post = [], [], None
+                    doc.append(token)
 
     return docs, titles

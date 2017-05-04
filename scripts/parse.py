@@ -41,7 +41,7 @@ if __name__ == '__main__':
             print('No valid indices selected. Continuing with all data.')
             data = load.data
 
-        nlp = English(parser=False)
+        nlp = English()
 
         unicode_posts = data['text'].str.decode('utf8')
         print('Processing {0} posts'.format(len(unicode_posts)))

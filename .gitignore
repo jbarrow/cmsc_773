@@ -2,6 +2,7 @@
 *.h5
 *.txt
 *.pkl
+*.zip
 
 # Mac-specific
 .DS_Store
