@@ -13,18 +13,22 @@ indices_dispatch = {
     'sample': lambda x: x.sample_indices
 }
 
-def write_line(fp, tok):
+def write_line(fp, tok, j):
     fp.write(
         '\t'.join(
-            [str(tok.i), tok.text, tok.lemma_, tok.pos_, '_', str(tok.head.i), tok.dep_]
+            [str(tok.i), tok.text, tok.lemma_, tok.pos_, '{},{}'.format(j, tok.rank), str(tok.head.i), tok.dep_]
         ) + '\n'
     )
 
 def write_conll(filename, post_id, title, doc, mode='w'):
     with codecs.open(filename, mode, encoding='utf-8') as fp:
         fp.write(post_id + '\n')
-        for tok in title: write_line(fp, tok)
-        for tok in doc: write_line(fp, tok)
+        for sent in title.sents:
+            for i, tok in enumerate(sent):
+                write_line(fp, tok, i)
+        for sent in doc.sents:
+            for i, tok in enumerate(sent):
+                write_line(fp, tok, i)
         fp.write('\n')
 
 if __name__ == '__main__':

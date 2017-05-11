@@ -5,7 +5,7 @@ import codecs
 
 from collections import namedtuple
 
-Token = namedtuple('Token', ['i', 'tok', 'lemma', 'pos', 'head', 'dep'])
+Token = namedtuple('Token', ['i', 'tok', 'lemma', 'pos', 'head', 'sent', 'rank', 'dep'])
 
 def read_broken_tsv(filename):
     """
@@ -64,7 +64,8 @@ def parse_line(line):
         line.append('_')
     elif len(line) < 6:
         return None
-    return Token(int(line[0]), line[1], line[2], line[3], int(line[5]), line[6])
+    sent, rank = line[4].split(',')
+    return Token(int(line[0]), line[1], line[2], line[3], int(line[5]), int(sent), int(rank), line[6])
 
 def read_parses(mask):
     """

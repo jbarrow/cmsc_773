@@ -1,3 +1,6 @@
+parses/*.parse
+data/**/*.csv
+
 # Data
 *.h5
 *.txt
