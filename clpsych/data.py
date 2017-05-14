@@ -60,9 +60,9 @@ def read_indices(mask):
 
 def parse_line(line):
     line = line.split('\t')
-    if len(line) == 6:
-        line.append('_')
-    elif len(line) < 6:
+#    if len(line) == 6:
+#        line.append('_')
+    if len(line) <= 6:
         return None
     sent, rank = line[4].split(',')
     return Token(int(line[0]), line[1], line[2], line[3], int(line[5]), int(sent), int(rank), line[6])
@@ -72,13 +72,26 @@ def read_parses(mask):
     Hideously ugly function to read in the parses.
     """
     docs, titles = {}, {}
+    # because I hate SpaCy and SpaCy hates me
+    space = False
     for f in glob.glob(mask):
         with codecs.open(f, 'r', encoding='utf-8') as fp:
             doc, title = [], []
             post = ''
+            prev = ''
             cur_title = False
             for line in fp:
-                if not line.strip():
+                if 'SPACE' in post:
+                    #print prev
+                    print line, doc, title, post, cur_title
+
+                if not post:
+                    # if we don't have a post, that means that the next line is
+                    # the new post title
+                    post = line.strip()
+                    continue
+                    
+                if not space and not line.strip():
                     # if we encounter a blank line, insert the previous post and
                     # keep going
                     docs[post] = doc
@@ -88,16 +101,15 @@ def read_parses(mask):
                     cur_title = False
                     continue
 
-                if not post:
-                    # if we don't have a post, that means that the next line is
-                    # the new post title
-                    post = line.strip()
-                    continue
-
                 # make sure that we have a token
                 token = parse_line(line.strip())
                 if token is None:
+                    space = True
                     continue
+
+                # if we've properly parsed a token, it can't be a space:
+                space = False
+                
                 # does it belong to a document or a title?
                 if token.i == 0:
                     if len(title) == 0:

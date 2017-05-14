@@ -4,11 +4,11 @@ import os
 
 if __name__ == '__main__':
     config = {
-        'mask': './**/**/*.posts',
-        'train_mask': './**/**/TRAIN.txt',
-        'test_mask': './**/**/TEST.txt',
-        'dev_mask': './**/**/DEV.txt',
-        'sample_mask': './SAMPLE.txt'
+        'mask': './data/**/*.posts',
+        'train_mask': './data/**/TRAIN.txt',
+        'test_mask': './data/**/TEST.txt',
+        'dev_mask': './data/**/DEV.txt',
+        'sample_mask': './data/SAMPLE.txt'
     }
 
     try:
