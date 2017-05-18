@@ -1,6 +1,8 @@
 parses/*.parse
 data/**/*.csv
 data/other_materials
+*.png
+*.csv
 
 # Data
 *.h5
