@@ -17,7 +17,7 @@ python -m scripts.parse
 Yes, the quotes are necessary. It has to be a mask that accesses both the
 positive indices and the negative indices.
 
-## Building and Classifying
+## Building the Features
 
 Much of our building process was done in iPython notebooks, which output CSVs. To align all the indices with their category, first run al the code in `Statistics.ipynb`. This will also output a `lemmas.txt` file, which has the tokenized and lemmatized data that the following notebooks depend on.
 
@@ -31,6 +31,10 @@ Finally, all of the readability/sentence features are created by running the fol
 ```
 python features_jeff.py
 ```
+
+## Classifying
+
+Once all the necessary CSVs are created, run all the code in `Classification.ipynb`.
 
 ## Using the Parse
 
